@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pê, o gatinho</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+
+        h1 {
+            color: #8a2be2; /* Cor roxa */
+        }
+
+        #tamagotchi {
+            width: 150px;
+            height: 150px;
+            background-color: #8a2be2; /* Cor roxa */
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            animation: bounce 1s infinite alternate;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .ear {
+            width: 40px;
+            height: 100px;
+            background-color: #8a2be2; /* Cor roxa */
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            z-index: -1;
+        }
+
+        #left-ear {
+            left: 25px;
+        }
+
+        #right-ear {
+            right: 25px;
+        }
+
+        .ear-inner {
+            width: 30px;
+            height: 80px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+        }
+
+        #left-ear .ear-inner {
+            left: 5px;
+        }
+
+        #right-ear .ear-inner {
+            right: 5px;
+        }
+
+        #face {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 30px;
+            left: 25px;
+            overflow: hidden;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .eye {
+            width: 30px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 30px;
+        }
+
+        #left-eye {
+            left: 10px;
+        }
+
+        #right-eye {
+            right: 10px;
+        }
+
+        .pupil {
+            width: 10px;
+            height: 15px;
+            background-color: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        #left-pupil {
+            left: 5px;
+        }
+
+        #right-pupil {
+            right: 5px;
+        }
+
+        .nose {
+            width: 8px;
+            height: 8px;
+            background-color: #888;
+            border-radius: 50%;
+            position: absolute;
+            top: 50px;
+            left: 46px;
+        }
+
+        .mouth {
+            width: 20px;
+            height: 10px;
+            background-color: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 65px;
+            left: 40px;
+        }
+
+        .whiskers {
+            position: absolute;
+            top: 45px;
+            width: 80px;
+        }
+
+        .whiskers:before,
+        .whiskers:after {
+            content: "";
+            width: 40px;
+            height: 1px;
+            background-color: #000;
+            position: absolute;
+        }
+
+        .whiskers:before {
+            top: 0;
+        }
+
+        .whiskers:after {
+            bottom: 0;
+        }
+
+        .ear-tip {
+            width: 15px;
+            height: 15px;
+            background-color: #8a2be2; /* Cor roxa */
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        #left-ear .ear-tip {
+            top: -5px;
+            left: 5px;
+        }
+
+        #right-ear .ear-tip {
+            top: -5px;
+            right: 5px;
+        }
+
+        .tail {
+            width: 50px;
+            height: 70px;
+            background-color: #8a2be2; /* Cor roxa */
+            position: absolute;
+            top: 90px;
+            right: 30px;
+            transform: rotate(45deg);
+            box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button {
+            background-color: #8a2be2; /* Cor roxa */
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #status {
+            font-weight: bold;
+            color: #8a2be2; /* Cor roxa */
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Pê, o gatinhot</h1>
+    <div id="tamagotchi">
+        <div class="ear" id="left-ear">
+            <div class="ear-inner"></div>
+            <div class="ear-tip"></div>
+        </div>
+        <div class="ear" id="right-ear">
+            <div class="ear-inner"></div>
+            <div class="ear-tip"></div>
+        </div>
+        <div id="face">
+            <div class="eye" id="left-eye">
+                <div class="pupil" id="left-pupil"></div>
+            </div>
+            <div class="eye" id="right-eye">
+                <div class="pupil" id="right-pupil"></div>
+            </div>
+            <div class="nose"></div>
+            <div class="mouth"></div>
+        </div>
+    </div>
+    <button onclick="feed()">Alimentar</button>
+    <button onclick="pet()">Acariciar</button>
+    <button onclick="play()">Brincar</button>
+    <p>Status: <span id="status">Feliz</span></p>
+
+    <script>
+        let hunger = 100;
+        let happiness = 100;
+        let isAlive = true;
+
+        function updateStatus() {
+            if (!isAlive) {
+                document.getElementById("status").innerText = "Seu Tamagotchi morreu!";
+                return;
+            }
+
+            if (hunger <= 0 || happiness <= 0) {
+                isAlive = false;
+            }
+
+            if (isAlive) {
+                if (hunger <= 50 || happiness <= 50) {
+                    document.getElementById("status").innerText = "Estou me sentindo mal...";
+                } else {
+                    document.getElementById("status").innerText = "Estou feliz!";
+                }
+            } else {
+                document.getElementById("status").innerText = "Seu Tamagotchi morreu!";
+            }
+        }
+
+        function decreaseHunger() {
+            if (hunger > 0) {
+                hunger -= 10;
+                document.getElementById("hunger").innerText = hunger;
+            }
+        }
+
+        function decreaseHappiness() {
+            if (happiness > 0) {
+                happiness -= 10;
+                document.getElementById("happiness").innerText = happiness;
+            }
+        }
+
+        function feed() {
+            if (isAlive) {
+                if (hunger <= 90) {
+                    hunger += 10;
+                } else {
+                    hunger = 100;
+                }
+                decreaseHappiness();
+                updateStatus();
+            }
+        }
+
+        function pet() {
+            if (isAlive) {
+                if (happiness <= 90) {
+                    happiness += 10;
+                } else {
+                    happiness = 100;
+                }
+                decreaseHunger();
+                updateStatus();
+            }
+        }
+
+        function play() {
+            if (isAlive) {
+                if (hunger > 0) {
+                    hunger -= 10;
+                }
+                if (happiness <= 90) {
+                    happiness += 10;
+                } else {
+                    happiness = 100;
+                }
+                updateStatus();
+            }
+        }
+
+        // Update Tamagotchi's facial expressions based on its mood
+        function updateFace() {
+            const mouth = document.querySelector(".mouth");
+            const leftPupil = document.getElementById("left-pupil");
+            const rightPupil = document.getElementById("right-pupil");
+
+            if (happiness <= 50) {
+                mouth.style.borderTop = "none";
+                mouth.style.borderBottom = "2px solid #888";
+            } else {
+                mouth.style.borderTop = "2px solid #888";
+                mouth.style.borderBottom = "none";
+            }
+
+            // Move pupils to simulate looking around
+            const pupilPositionX = happiness / 100 * 5;
+            leftPupil.style.transform = `translateX(${pupilPositionX}px)`;
+            rightPupil.style.transform = `translateX(-${pupilPositionX}px)`;
+        }
+
+        // Update Tamagotchi's animation based on its mood
+        function updateAnimation() {
+            const tamagotchi = document.getElementById("tamagotchi");
+            if (happiness <= 50) {
+                tamagotchi.style.animation = "bounce 0.8s infinite alternate";
+            } else {
+                tamagotchi.style.animation = "bounce 1s infinite alternate";
+            }
+        }
+
+        function updateTamagotchi() {
+            updateStatus();
+            updateFace();
+            updateAnimation();
+        }
+
+        setInterval(updateTamagotchi, 1000);
+    </script>
+</body>
+</html>
